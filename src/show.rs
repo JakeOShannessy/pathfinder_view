@@ -1,7 +1,11 @@
 
 use winit::event::{Event, ElementState as WinitElementState, ModifiersState, WindowEvent, KeyboardInput, MouseButton, MouseScrollDelta, StartCause};
 use winit::event_loop::{EventLoop, ControlFlow, EventLoopProxy};
-use winit::platform::{run_return::EventLoopExtRunReturn, unix::EventLoopExtUnix};
+use winit::platform::{run_return::EventLoopExtRunReturn};
+#[cfg(unix)]
+use winit::platform::unix::EventLoopExtUnix;
+#[cfg(windows)]
+use winit::platform::windows::EventLoopExtWindows;
 use winit::dpi::{PhysicalSize, PhysicalPosition};
 use crate::view::{Interactive};
 use crate::{ElementState, KeyEvent, Config, Modifiers, Context};
@@ -11,6 +15,7 @@ use pathfinder_renderer::{
     options::{BuildOptions, RenderTransform},
 };
 use std::time::{Instant, Duration};
+use log::*;
 
 impl From<WinitElementState> for ElementState {
     fn from(s: WinitElementState) -> ElementState {
@@ -200,7 +205,7 @@ pub fn show(mut item: impl Interactive, config: Config) {
         if ctx.redraw_requested {
             ctx.backend.window.request_redraw();
         }
-        
+
         if let Some(dt) = ctx.update_interval {
             *control_flow = ControlFlow::WaitUntil(Instant::now() + Duration::from_secs_f32(dt));
         }

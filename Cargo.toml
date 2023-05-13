@@ -46,7 +46,7 @@ js-sys = "*"
 wasm-bindgen = "*"
 bincode = "*"
 
-[target.'cfg(unix)'.dependencies]
+[target.'cfg(not(target_arch="wasm32"))'.dependencies]
 pathfinder_gl = { git = "https://github.com/servo/pathfinder/" }
 gl = "0.14.0"
 glutin = "0.26"

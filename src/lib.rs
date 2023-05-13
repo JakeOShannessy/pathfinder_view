@@ -1,15 +1,14 @@
-#[macro_use] extern crate log;
 pub mod view;
 
 pub use view::Interactive;
 
-#[cfg(unix)]
+#[cfg(not(target_arch="wasm32"))]
 pub mod gl;
 
-#[cfg(unix)]
+#[cfg(not(target_arch="wasm32"))]
 mod show;
 
-#[cfg(unix)]
+#[cfg(not(target_arch="wasm32"))]
 pub use show::*;
 
 #[cfg(target_arch="wasm32")]
@@ -269,7 +268,6 @@ macro_rules! keycodes {
         #[derive(Copy, Clone, Debug, PartialEq, Eq, Hash)]
         pub enum KeyCode { $( $(#[$meta])? $key,)* }
 
-        #[cfg(unix)]
         impl From<winit::event::VirtualKeyCode> for KeyCode {
             fn from(c: winit::event::VirtualKeyCode) -> Self {
                 match c {
